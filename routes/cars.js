@@ -96,16 +96,26 @@ router.get("/", async (req, res) => {
 });
 
 // === Получение машины по id ===
+import mongoose from "mongoose";
+
 router.get("/:id", async (req, res) => {
   try {
-    const car = await Car.findById(req.params.id);
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Невалидный id" });
+    }
+
+    const car = await Car.findById(id);
     if (!car) return res.status(404).json({ message: "Машина не найдена" });
+
     res.json(car);
   } catch (err) {
     console.error("Ошибка при получении машины:", err);
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // === Редактирование машины ===
 router.put("/:id", upload.fields([{ name: "images" }, { name: "videos" }]), async (req, res) => {
