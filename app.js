@@ -13,8 +13,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+const mongo_uri = "mongodb+srv://KCCAvto:Askim355@cluster0.g4dme8t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(mongo_uri)
 .then(() => console.log("✅ MongoDB подключена"))
 .catch((err) => console.error("❌ Ошибка подключения:", err));
 
