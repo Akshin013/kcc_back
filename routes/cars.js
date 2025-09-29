@@ -8,9 +8,9 @@ const router = express.Router();
 
 // 🔑 Настройка Cloudinary
 cloudinary.config({
-  cloud_name: "dvm6my9na",
-  api_key: "241795374821197",
-  api_secret: "TutoKTr9lCuBdzSOgZXh_gXDbBY",
+  cloud_name: "dsigbmb7p",
+  api_key: "785866647597651",
+  api_secret: "Awc-sndEHqIsoKr0BGDsUfFb87o",
 });
 
 // 🔧 multer — хранение файлов в памяти
