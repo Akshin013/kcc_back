@@ -4,8 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import carsRouter from "./cars.js";
-import favoritesRouter from './favorites.js';
+import carsRouter from "./routes/cars.js";         // исправлено
+import favoritesRouter from "./routes/favorites.js"; // исправлено
 
 dotenv.config();
 
@@ -31,7 +31,6 @@ app.use(cors({
 
 app.use(express.json());
 app.use("/api/favorites", favoritesRouter); 
-
 app.use("/api/cars", carsRouter);
 
 const PORT = process.env.PORT || 5000;
