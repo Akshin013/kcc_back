@@ -25,7 +25,7 @@ app.use(cors({
 
 
 app.use(express.json());
-app.use("/api/favorites", favoritesRouter); 
+app.use("https://kcc-back.onrender.com/api/favorites", favoritesRouter); 
 app.use("https://kcc-back.onrender.com/api/cars", carsRouter);
 
 const PORT = process.env.PORT || 5000;
