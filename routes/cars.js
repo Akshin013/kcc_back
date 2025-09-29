@@ -97,6 +97,7 @@ router.get("/", async (req, res) => {
 
 // === Получение машины по id ===
 router.get("/:id", async (req, res) => {
+  console.log("Запрошенный ID:", req.params.id); // <--- проверка
   try {
     const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ message: "Машина не найдена" });
@@ -106,6 +107,7 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 
 // === Редактирование машины ===
