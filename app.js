@@ -22,8 +22,11 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((err) => console.error("❌ Ошибка подключения:", err));
 
 app.use(cors({
-  origin: '*', // разрешает любые источники
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  origin: [
+    "https://kcc-zxwj.vercel.app", // фронт на Vercel
+    "http://localhost:3000"         // локальная разработка
+  ],
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"]
 }));
 
 app.use(express.json());
