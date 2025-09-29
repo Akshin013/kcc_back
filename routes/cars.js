@@ -96,19 +96,10 @@ router.get("/", async (req, res) => {
 });
 
 // === Получение машины по id ===
-import mongoose from "mongoose";
-
 router.get("/:id", async (req, res) => {
   try {
-    const { id } = req.params;
-
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "Невалидный id" });
-    }
-
-    const car = await Car.findById(id);
+    const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ message: "Машина не найдена" });
-
     res.json(car);
   } catch (err) {
     console.error("Ошибка при получении машины:", err);
