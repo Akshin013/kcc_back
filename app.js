@@ -4,7 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
-import carsRouter from ".//cars.js";
+import carsRouter from "./cars.js";
 import favoritesRouter from './favorites.js';
 
 dotenv.config();
