@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.use(cors({
   origin: "*",
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 }));
 
 
