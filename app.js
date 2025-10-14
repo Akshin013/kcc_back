@@ -28,7 +28,7 @@ app.use(express.json());
 app.use("/api/favorites", favoritesRouter); 
 app.use("/api/cars", carsRouter);
 
-const PORT = process.env.PORT || 5000;
+const PORT =  5000;
 app.listen(PORT, '0.0.0.0', () => 
   console.log(`🚀 Сервер запущен: http://0.0.0.0:${PORT}`)
 );
