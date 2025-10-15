@@ -24,7 +24,9 @@ app.use(cors({
 }));
 
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" })); // чтобы можно было отправлять большие JSON
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/api/favorites", favoritesRouter); 
 app.use("/api/cars", carsRouter);
 
