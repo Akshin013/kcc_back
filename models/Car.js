@@ -12,7 +12,8 @@ const carSchema = new mongoose.Schema({
   boya: String,
   deyisen: String,
   yanacaq: String,
-  sold: { type: Boolean, default: false }, // ✅ новое поле
+  vin: String, // 🆕 VIN-код как обычная строка
+  sold: { type: Boolean, default: false },
   images: [String],
   videos: [String],
   createdAt: { type: Date, default: Date.now },
