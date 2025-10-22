@@ -1,4 +1,4 @@
-'use client' 
+// routes/cars.js
 import express from "express";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
@@ -8,9 +8,9 @@ const router = express.Router();
 
 // 🔑 Настройка Cloudinary
 cloudinary.config({
-  cloud_name: "dsigbmb7p",
-  api_key: "785866647597651",
-  api_secret: "Awc-sndEHqIsoKr0BGDsUfFb87o",
+  cloud_name: "dvm6my9na",
+  api_key: "241795374821197",
+  api_secret: "TutoKTr9lCuBdzSOgZXh_gXDbBY",
 });
 
 // 🔧 multer — хранение файлов в памяти
@@ -30,8 +30,7 @@ const uploadToCloudinary = (file, folder = "cars") => {
   });
 };
 
-// === Добавление машины ===
-// Генерация уникального 4-значного carId
+// === Генерация уникального 4-значного carId ===
 const generateCarId = async () => {
   let id;
   let exists = true;
@@ -44,11 +43,24 @@ const generateCarId = async () => {
   return id;
 };
 
+// === Добавление машины ===
 router.post("/", upload.fields([{ name: "images" }, { name: "videos" }]), async (req, res) => {
   try {
-    const { marka, model, qiymet, il, km, yerSayi, lyuk, boya, deyisen, yanacaq } = req.body;
+    const {
+      marka,
+      model,
+      qiymet,
+      il,
+      km,
+      yerSayi,
+      lyuk,
+      boya,
+      deyisen,
+      yanacaq,
+      vin // ✅ добавили VIN
+    } = req.body;
 
-    const carId = await generateCarId(); // 🔥 создаём автоматически
+    const carId = await generateCarId(); // создаём автоматически
 
     const images = req.files.images
       ? await Promise.all(req.files.images.map(file => uploadToCloudinary(file, "cars/images")))
@@ -70,6 +82,7 @@ router.post("/", upload.fields([{ name: "images" }, { name: "videos" }]), async 
       boya,
       deyisen,
       yanacaq,
+      vin, // ✅ сохраняем VIN
       images,
       videos,
       createdAt: new Date(),
@@ -82,7 +95,6 @@ router.post("/", upload.fields([{ name: "images" }, { name: "videos" }]), async 
     res.status(500).json({ message: "Ошибка при добавлении машины" });
   }
 });
-
 
 // === Получение всех машин ===
 router.get("/", async (req, res) => {
@@ -97,7 +109,6 @@ router.get("/", async (req, res) => {
 
 // === Получение машины по id ===
 router.get("/:id", async (req, res) => {
-  console.log("Запрошенный ID:", req.params.id); // <--- проверка
   try {
     const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ message: "Машина не найдена" });
@@ -108,15 +119,26 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-
-
 // === Редактирование машины ===
 router.put("/:id", upload.fields([{ name: "images" }, { name: "videos" }]), async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
     if (!car) return res.status(404).json({ message: "Машина не найдена" });
 
-    const { marka, model, qiymet, il, km, yerSayi, lyuk, boya, deyisen, yanacaq, sold } = req.body;
+    const {
+      marka,
+      model,
+      qiymet,
+      il,
+      km,
+      yerSayi,
+      lyuk,
+      boya,
+      deyisen,
+      yanacaq,
+      sold,
+      vin // ✅ добавили VIN в редактирование
+    } = req.body;
 
     car.marka = marka ?? car.marka;
     car.model = model ?? car.model;
@@ -128,6 +150,7 @@ router.put("/:id", upload.fields([{ name: "images" }, { name: "videos" }]), asyn
     car.boya = boya ?? car.boya;
     car.deyisen = deyisen ?? car.deyisen;
     car.yanacaq = yanacaq ?? car.yanacaq;
+    car.vin = vin ?? car.vin; // ✅ обновляем VIN при редактировании
     car.sold = sold !== undefined ? sold === "true" : car.sold;
 
     // новые фото → Cloudinary
@@ -150,14 +173,11 @@ router.put("/:id", upload.fields([{ name: "images" }, { name: "videos" }]), asyn
   }
 });
 
+// === Обновление статуса "продано" ===
 router.patch("/:id/sold", async (req, res) => {
   try {
-    const { sold } = req.body; // ожидаем JSON { sold: true/false }
-    const car = await Car.findByIdAndUpdate(
-      req.params.id,
-      { sold },
-      { new: true }
-    );
+    const { sold } = req.body;
+    const car = await Car.findByIdAndUpdate(req.params.id, { sold }, { new: true });
     if (!car) return res.status(404).json({ message: "Машина не найдена" });
     res.json(car);
   } catch (err) {
@@ -166,15 +186,11 @@ router.patch("/:id/sold", async (req, res) => {
   }
 });
 
-
 // === Удаление машины ===
 router.delete("/:id", async (req, res) => {
   try {
     const car = await Car.findByIdAndDelete(req.params.id);
     if (!car) return res.status(404).json({ message: "Машина не найдена" });
-
-    // ⚠️ Можно удалить файлы с Cloudinary, если нужно
-
     res.json({ message: "Машина успешно удалена" });
   } catch (err) {
     console.error("❌ Ошибка при удалении машины:", err);
