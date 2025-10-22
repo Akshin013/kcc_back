@@ -12,7 +12,10 @@ const carSchema = new mongoose.Schema({
   boya: String,
   deyisen: String,
   yanacaq: String,
-  vin: String, // 🆕 VIN-код как обычная строка
+    vin: {
+    type: String,
+    set: v => v?.toUpperCase() // 🆕 Всегда переводим VIN в верхний регистр
+  },
   sold: { type: Boolean, default: false },
   images: [String],
   videos: [String],
