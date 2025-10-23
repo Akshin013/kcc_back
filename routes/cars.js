@@ -15,20 +15,37 @@ cloudinary.config({
 
 // 🔧 multer — хранение файлов в памяти
 const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // максимум 15 MB на файл
+});
 
 // 📌 ХЕЛПЕР для загрузки в Cloudinary
-const uploadToCloudinary = (file, folder = "cars") => {
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream(
-      { folder, resource_type: file.mimetype.startsWith("video") ? "video" : "image" },
-      (err, result) => {
-        if (err) reject(err);
-        else resolve(result.secure_url);
-      }
-    ).end(file.buffer);
-  });
+const uploadToCloudinary = async (file, folder = "cars") => {
+  try {
+    return await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error("⏱️ Cloudinary timeout")), 60000);
+
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          folder,
+          resource_type: file.mimetype.startsWith("video") ? "video" : "image",
+        },
+        (err, result) => {
+          clearTimeout(timeout);
+          if (err) reject(err);
+          else resolve(result.secure_url);
+        }
+      );
+
+      stream.end(file.buffer);
+    });
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    return null; // чтобы не крашило Promise.all
+  }
 };
+
 
 // === Генерация уникального 4-значного carId ===
 const generateCarId = async () => {
