@@ -114,15 +114,43 @@ router.post("/", upload.fields([{ name: "images" }, { name: "videos" }]), async 
 });
 
 // === Получение всех машин ===
+// router.get("/", async (req, res) => {
+//   try {
+//     const cars = await Car.find().sort({ createdAt: -1 });
+//     res.json(cars);
+//   } catch (err) {
+//     console.error("❌ Ошибка при получении машин:", err);
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+
 router.get("/", async (req, res) => {
   try {
-    const cars = await Car.find().sort({ createdAt: -1 });
+    const cars = await Car.find({}, {
+      marka: 1,
+      model: 1,
+      versiya: 1,
+      il: 1,
+      qiymet: 1,
+      yanacaq: 1,
+      km: 1,
+      vin: 1,
+      sold: 1,
+      images: { $slice: 1 }, // только 1 картинка
+      createdAt: 1
+    }).sort({ createdAt: -1 });
+
     res.json(cars);
   } catch (err) {
     console.error("❌ Ошибка при получении машин:", err);
     res.status(500).json({ message: err.message });
   }
 });
+
+
+
+
 
 // === Получение машины по id ===
 router.get("/:id", async (req, res) => {
