@@ -128,6 +128,7 @@ router.post("/", upload.fields([{ name: "images" }, { name: "videos" }]), async 
 router.get("/", async (req, res) => {
   try {
     const cars = await Car.find({}, {
+      carId: 1,
       marka: 1,
       model: 1,
       versiya: 1,
@@ -147,9 +148,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-
-
 
 
 // === Получение машины по id ===
