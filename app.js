@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
+import path from "path";a
 import { fileURLToPath } from "url";
 import carsRouter from "./routes/cars.js";
 import favoritesRouter from "./routes/favorites.js";
@@ -22,6 +22,11 @@ app.use(cors({
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
+
+app.get("/api/ping", (req, res) => {
+  console.log("ping url");
+  res.json({ status: "ok", message: "pong" });
+});
 
 // ✅ 2. Подключаем маршруты
 app.use("/api/favorites", favoritesRouter);
