@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";a
+import path from "path";
 import { fileURLToPath } from "url";
 import carsRouter from "./routes/cars.js";
 import favoritesRouter from "./routes/favorites.js";
